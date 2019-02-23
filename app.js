@@ -7,6 +7,7 @@ const hbs = require('hbs');
 const mongoose = require('mongoose');
 const logger = require('morgan');
 const path = require('path');
+const favicon = require('serve-favicon');
 const session = require("express-session");
 const passport = require("passport");
 const ensureLogin = require("connect-ensure-login");
@@ -30,6 +31,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
 // Express View engine setup
 
