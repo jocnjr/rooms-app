@@ -1,0 +1,43 @@
+  <div class="container-fluid">
+    <h1>{{#if user._id}}edit{{else}}add{{/if}} user</h1>
+
+    <form id="form" action="/users/{{#if user._id}}edit{{else}}add{{/if}}" method="POST" enctype="multipart/form-data">
+    {{#with user}}
+      <input type="hidden" name="userId" value="{{_id}}">
+      <div class="form-group">
+        <label for="fullName">Name</label><br>
+        <input type="text" class="form-control" name="fullName"
+          placeholder="enter your full name"
+          value="{{fullName}}">        
+      </div>
+
+      <div class="form-group">
+        <label for="image">Profile Img</label><br>
+        <input type="file" class="form-control" name="image">        
+          
+      </div>
+
+      {{#unless facebookId}}
+        <div class="form-group">
+          <label for="email">email</label><br>
+          <input type="text" class="form-control" name="email"
+            placeholder="add the email"
+            value="{{email}}"
+            >
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label><br>
+          <input type="password" class="form-control" name="password"
+            placeholder="enter password">
+        </div>
+      {{/unless}}
+
+      {{#if msgError}}
+        <div class="alert alert-danger">{{ msgError }}</div>
+      {{/if}}
+
+      <button class="btn btn-primary btn-block">{{#if _id}}edit{{else}}add{{/if}} user</button>
+    {{/with}}
+    </form>
+</div>
