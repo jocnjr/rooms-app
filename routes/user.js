@@ -41,10 +41,10 @@ router.post("/users/add", uploadCloud.single('image'), (req, res, next) => {
       password
     } = req.body;
   
-    const imagUrl = null;
+    let imageUrl = null;
 
     if (req.file) {
-      const imageUrl = req.file.url;
+      imageUrl = req.file.url;
     }
 
     if (email == '' || password == '') {
@@ -76,7 +76,7 @@ router.post("/users/add", uploadCloud.single('image'), (req, res, next) => {
       const newUser = new User({
         fullName,
         email,
-        password: hashPass,
+        password,
         imageUrl,
         token
       });
@@ -138,24 +138,13 @@ router.post("/users/edit", uploadCloud.single('image'), (req, res, next) => {
 router.get("/users/delete/:id", (req, res, next) => {
   let userId = req.params.id;
   if (!/^[0-9a-fA-F]{24}$/.test(userId)) return res.status(404).send('not-found');
-  User.findOne({ _id: userId })
-    .then(user => {
-      res.render("users/delete", { user, currentUser: req.user });
-    })
-    .catch(error => {
-      throw new Error(error);
-    });
-});
-
-router.post("/users/delete", (req, res, next) => {
-  let userId = req.body.id;
   User.deleteOne({ _id: userId })
     .then(user => {
-      res.render("users/delete", { message: `user ${user.name} deleted!`, currentUser: req.user });    
+      res.redirect("/users");    
     })
     .catch(error => {
       throw new Error(error);
-    });
+  });
 });
 
 module.exports = router;

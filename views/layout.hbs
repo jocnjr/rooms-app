@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>{{title}}</title>
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="/css/style.css" />
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBV-R9RTge16U6KdCLwOd-eS36XQJvYYL0"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key={{GMAPS}}"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>  
   <script src="/js/script.js"></script>
 </head>
 <body class="d-flex flex-column h-100">
@@ -27,7 +28,7 @@
                         <a class="nav-link" href="/users">users</a>
                     </li>
                     <li class="nav-item {{#if pageHome}}active{{/if}}">
-                        <a class="nav-link" href="/courses">courses</a>
+                        <a class="nav-link" href="/rooms">rooms</a>
                     </li>
                 </ul>
 
