@@ -18,6 +18,7 @@ router.get("/room/:id", (req, res, next) => {
   let roomId = req.params.id;
   if (!/^[0-9a-fA-F]{24}$/.test(roomId)) return res.status(404).send('not-found');
   Room.findOne({ _id: roomId })
+    .populate('reviews')
     .then(room => {
       res.render("rooms/detail", { room } );
     })

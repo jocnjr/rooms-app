@@ -17,10 +17,11 @@ const ensureLogin = require("connect-ensure-login");
 // const User = require("./models/user");
 const bcrypt = require("bcrypt");
 const envInjector = require('./middlewares/envInjection');
-const siteRoutes = require('./routes/index.js');
-const userRoutes = require('./routes/user.js');
-const roomRoutes = require('./routes/room.js');
-const apiRoutes = require('./routes/api.js');
+const siteRoutes = require('./routes/index');
+const userRoutes = require('./routes/user');
+const roomRoutes = require('./routes/room');
+const apiRoutes = require('./routes/api');
+const reviewRoutes = require('./routes/review');
 
 mongoose
   .connect(process.env.MONGODB_URI, {useNewUrlParser: true})
@@ -56,6 +57,7 @@ app.use('/', siteRoutes);
 app.use('/', userRoutes);
 app.use('/', roomRoutes);
 app.use('/', apiRoutes);
+app.use('/', reviewRoutes);
 
 
 // catch 404 and render a not-found.hbs template

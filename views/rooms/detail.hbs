@@ -6,8 +6,34 @@
   <p>{{room.description}}</p>
   
   <div id="map"></div>
+
   <hr class="my-4" />
-  <a href="/rooms">Return</a>
+
   <script> idRoom = '{{room._id}}';</script>
 
+  <p>Add a review</p>
+  <form action="/reviews/add" method="post">
+    <input type="hidden" name="roomId" value="{{room._id}}">
+    <input type="hidden" name="user" value="">
+
+
+    <label for="comment">Comment:</label>
+    <textarea type="text" name="comment"></textarea>
+
+    <label for="comment">Rating:</label>
+    <input type="text" name="rating" placeholder="1 to 5">
+    <button type="submit">ADD</button>
+  </form>
+
+  <hr class="my-4" />
+
+  <h2>Reviews</h2>
+  {{#each room.reviews}}
+  <div class="review-item">
+    <p>{{this.user}}: {{this.comment}}</p>
+    <span>rating: {{this.rating}}</span>
+  </div>
+  {{/each}}
+  <hr class="my-4" />
+  <a href="/rooms">Return</a>
 </div>
