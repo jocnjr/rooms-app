@@ -1,14 +1,29 @@
+require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const User = require('../models/user');
 const bcrypt = require("bcrypt");
 const bcryptSalt = 10;
 const uploadCloud = require('../config/cloudinary.js');
+const nodemailer = require('nodemailer');
 
+let transporter = nodemailer.createTransport({
+  host: process.env.MAILHOST,
+  port: process.env.MAILPORT,
+  auth: {
+    user: process.env.MAILTRAPUSER,
+    pass: process.env.MAILTRAPPASSWD
+  }
+});
 
 router.get("/users", (req, res, next) => {
   User.find()
     .then(users => {
+      users.forEach(user => {
+        if (req.user && user._id.equals(req.user._id)) {
+          user.owned = true;
+        }
+      });
       res.render("users/index", { users });
     })
     .catch(error => {
@@ -76,14 +91,24 @@ router.post("/users/add", uploadCloud.single('image'), (req, res, next) => {
       const newUser = new User({
         fullName,
         email,
-        password,
+        password: hashPass,
         imageUrl,
         token
       });
   
+      let emailHTMLBody = `please confirm your email, click <a href="http://localhost:3000/confirm/${token}">here</a>`;
+
       newUser.save()
       .then(user => {
-        res.redirect("/users");
+        transporter.sendMail({
+          from: '"Rooms App" <noreply@roomsapp.com>',
+          to: email, 
+          subject: 'please, confirm your email - rooms app', 
+          // text: message,
+          html: `<b>${emailHTMLBody}</b>`
+        })
+        .then(info => res.redirect('/users'))
+        .catch(err => { throw new Error(error)})
       })
       .catch(err => { throw new Error(err)});
     })
@@ -96,6 +121,7 @@ router.get("/users/edit/:id", (req, res, next) => {
   
     User.findOne({ _id: userId })
       .then(user => {
+        console.log(`${req.user}`);
         if (user._id.equals(req.user._id)) {
           res.render("users/form", { user });
         } else {
@@ -133,6 +159,47 @@ router.post("/users/edit", uploadCloud.single('image'), (req, res, next) => {
       .catch(error => {
         throw new Error(error);
       });
+});
+
+router.get('/confirm/:token', (req, res) => {
+  const { token } = req.params;
+
+  User.findOneAndUpdate({ token }, {$set: {status: 'active'}}, { new: true })
+  .then(user => {
+    if (user.status === 'active') res.status(500).send('user already confirmed');
+
+    (user) ? res.render("users/confirmation", { user }) : res.status(500).send('user not found');
+  })
+  .catch(err => { throw new Error(err) });
+
+});
+
+router.get('/send/confirmation', (req, res) => {
+  res.render("users/confirmation-send");
+});
+
+router.post('/send/confirmation', (req, res) => {
+  const { email } = req.body;
+
+  User.findOne({ email })
+  .then(user => {
+    if (!user) res.render("users/confirmation-send", { msgError: 'user not found' });
+    
+    let emailHTMLBody = `please confirm your email, click <a href="http://localhost:3000/confirm/${user.token}">here</a>`;
+
+    transporter.sendMail({
+      from: '"Rooms App" <noreply@roomsapp.com>',
+      to: user.email, 
+      subject: 'please, confirm your email - rooms app', 
+      // text: message,
+      html: `<b>${emailHTMLBody}</b>`
+    })
+    .then(info => res.render("users/confirmation-send", { msgError: 'a new email confirmation has been sent' }))
+    .catch(err => { throw new Error(err)})
+    
+  })
+  .catch(err => { throw new Error(err) });
+
 });
 
 router.get("/users/delete/:id", (req, res, next) => {

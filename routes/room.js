@@ -7,6 +7,12 @@ const uploadCloud = require('../config/cloudinary.js');
 router.get("/rooms", (req, res, next) => {
   Room.find()
     .then(rooms => {
+      rooms.forEach(room => {
+        if (room.owner && room.owner.equals(req.user._id)) {
+          console.log(`${room.owner}`);
+          room.owned = true;
+        }
+      });
       res.render("rooms/index", { rooms });
     })
     .catch(error => {
@@ -18,8 +24,9 @@ router.get("/room/:id", (req, res, next) => {
   let roomId = req.params.id;
   if (!/^[0-9a-fA-F]{24}$/.test(roomId)) return res.status(404).send('not-found');
   Room.findOne({ _id: roomId })
-    .populate('reviews')
+    .populate({path: 'reviews', populate: { path: 'user' }})
     .then(room => {
+      console.log(room)
       res.render("rooms/detail", { room } );
     })
     .catch(error => {
@@ -38,7 +45,8 @@ router.post("/rooms/add", uploadCloud.single('image'), (req, res, next) => {
       name,
       description,
       latitude,
-      longitude
+      longitude,
+      owner
     } = req.body;
   
     let imageUrl = null;
@@ -52,14 +60,12 @@ router.post("/rooms/add", uploadCloud.single('image'), (req, res, next) => {
       coordinates: [longitude, latitude] 
     };
 
-    const owner = '';
-
     const newRoom = new Room({
       name,
       description,
       location,
       imageUrl,
-      // owner
+      owner
     });
   
     newRoom.save()

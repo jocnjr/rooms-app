@@ -8,20 +8,17 @@ const mongoose = require('mongoose');
 const logger = require('morgan');
 const path = require('path');
 const favicon = require('serve-favicon');
-const session = require("express-session");
-const passport = require("passport");
-const ensureLogin = require("connect-ensure-login");
-// const FacebookStrategy = require('passport-facebook').Strategy;
-// const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-// const LocalStrategy = require("passport-local").Strategy;
-// const User = require("./models/user");
-const bcrypt = require("bcrypt");
 const envInjector = require('./middlewares/envInjection');
 const siteRoutes = require('./routes/index');
 const userRoutes = require('./routes/user');
 const roomRoutes = require('./routes/room');
 const apiRoutes = require('./routes/api');
 const reviewRoutes = require('./routes/review');
+const authRoutes = require('./routes/auth');
+const passportConfig = require('./config/passport.js');
+const ensureLogin = require("connect-ensure-login");
+
+
 
 mongoose
   .connect(process.env.MONGODB_URI, {useNewUrlParser: true})
@@ -40,7 +37,6 @@ app.use(cookieParser());
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.use(envInjector);
 
-
 // Express View engine setup
 
 hbs.registerPartials(__dirname + '/views/partials');
@@ -48,16 +44,22 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+// passport and session config
+app.use(passportConfig);
+
 // default value for title local
 app.locals.title = 'Rooms App - The Review Project';
 
 // injecting routes
+// app.use(ensureLogin.ensureLoggedIn());
 
 app.use('/', siteRoutes);
 app.use('/', userRoutes);
 app.use('/', roomRoutes);
 app.use('/', apiRoutes);
 app.use('/', reviewRoutes);
+app.use('/', authRoutes);
 
 
 // catch 404 and render a not-found.hbs template
