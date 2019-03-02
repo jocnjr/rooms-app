@@ -1,0 +1,19 @@
+<div class="container">
+  <h1>Enter your email</h1>
+  <form id="form" action="/send/confirmation" method="POST">
+    <div class="form-group">
+      <label for="email">Email</label><br>
+      <input type="text" class="form-control" name="email"
+        placeholder="enter your email">        
+    </div>
+
+      {{#if msgError}}
+        <div class="alert alert-danger">{{ msgError }}</div>
+      {{/if}}
+
+      <button class="btn btn-primary btn-block">send email</button>
+
+  </form>
+  <hr class="my-4" />
+  <a href="/users">Return</a>
+</div>

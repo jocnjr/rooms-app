@@ -5,7 +5,7 @@ window.onload = () => {
     };
     
     const map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 13,
+      zoom: 10,
       center: ironhackSP
     });
   
@@ -57,7 +57,10 @@ window.onload = () => {
           lat: room.location.coordinates[1],
           lng: room.location.coordinates[0]
         };
-        bounds.extend(roomLocation);
+
+        map.setCenter(roomLocation);
+        
+        // bounds.extend(roomLocation);
         new google.maps.Marker({
           position: roomLocation,
           map: map,

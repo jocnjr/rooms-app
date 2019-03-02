@@ -2,6 +2,7 @@
     <h1>{{#if room._id}}edit{{else}}add{{/if}} room</h1>
 
     <form id="form" action="/rooms/{{#if room._id}}edit{{else}}add{{/if}}" method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="owner" value="{{currentUser._id}}">
     {{#with room}}
       <input type="hidden" name="roomId" value="{{_id}}">
       <div class="form-group">

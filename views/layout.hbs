@@ -34,7 +34,7 @@
 
                 <div class="mt-2 mt-md-0">
                     {{#if currentUser}}
-                        Hey, {{ currentUser.name }} <span class="badge badge-secondary">{{ currentUser.role }}</span>
+                        Hey, {{ currentUser.fullName }}
                         <a href="/logout" class="btn btn-danger btn-sm ml-2">logout</a>
                     {{else}}
                         <a href="/login" class="btn btn-success btn-sm">login</a>

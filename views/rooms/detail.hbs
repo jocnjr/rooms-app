@@ -14,7 +14,7 @@
   <p>Add a review</p>
   <form action="/reviews/add" method="post">
     <input type="hidden" name="roomId" value="{{room._id}}">
-    <input type="hidden" name="user" value="">
+    <input type="hidden" name="user" value="{{currentUser._id}}">
 
 
     <label for="comment">Comment:</label>
@@ -30,7 +30,7 @@
   <h2>Reviews</h2>
   {{#each room.reviews}}
   <div class="review-item">
-    <p>{{this.user}}: {{this.comment}}</p>
+    <p>{{this.user.fullName}}: {{this.comment}}</p>
     <span>rating: {{this.rating}}</span>
   </div>
   {{/each}}
