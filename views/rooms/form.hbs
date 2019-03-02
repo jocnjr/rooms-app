@@ -1,0 +1,47 @@
+  <div class="container-fluid">
+    <h1>{{#if room._id}}edit{{else}}add{{/if}} room</h1>
+
+    <form id="form" action="/rooms/{{#if room._id}}edit{{else}}add{{/if}}" method="POST" enctype="multipart/form-data">
+    {{#with room}}
+      <input type="hidden" name="roomId" value="{{_id}}">
+      <div class="form-group">
+        <label for="name">Name</label><br>
+        <input type="text" class="form-control" name="name"
+          placeholder="name the room"
+          value="{{name}}">        
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label><br>
+        <textarea class="form-control" name="description"
+          placeholder="tell more about the room">{{description}}</textarea>   
+      </div>
+
+      <div class="form-group">
+        <label for="image">Profile Img</label><br>
+        <input type="file" class="form-control" name="image">        
+          
+      </div>
+
+      <div class="form-group">
+        <label for="latitude">Latitude</label><br>
+        <input type="text" class="form-control" name="latitude"
+          placeholder="enter latitude"
+          value="{{location.coordinates.[1]}}">        
+      </div>
+
+      <div class="form-group">
+        <label for="longitude">Longitude</label><br>
+        <input type="text" class="form-control" name="longitude"
+          placeholder="enter longitude"
+          value="{{location.coordinates.[0]}}">        
+      </div>
+
+      {{#if msgError}}
+        <div class="alert alert-danger">{{ msgError }}</div>
+      {{/if}}
+
+      <button class="btn btn-primary btn-block">{{#if _id}}edit{{else}}add{{/if}} room</button>
+    {{/with}}
+    </form>
+</div>

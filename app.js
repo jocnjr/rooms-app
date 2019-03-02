@@ -12,10 +12,16 @@ const session = require("express-session");
 const passport = require("passport");
 const ensureLogin = require("connect-ensure-login");
 // const FacebookStrategy = require('passport-facebook').Strategy;
+// const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 // const LocalStrategy = require("passport-local").Strategy;
 // const User = require("./models/user");
 const bcrypt = require("bcrypt");
-const siteRoutes = require('./routes/index.js');
+const envInjector = require('./middlewares/envInjection');
+const siteRoutes = require('./routes/index');
+const userRoutes = require('./routes/user');
+const roomRoutes = require('./routes/room');
+const apiRoutes = require('./routes/api');
+const reviewRoutes = require('./routes/review');
 
 mongoose
   .connect(process.env.MONGODB_URI, {useNewUrlParser: true})
@@ -26,29 +32,16 @@ mongoose
     throw new Error(error);
   });
 
-  // Middleware Setup
+// Middleware Setup
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
+app.use(envInjector);
+
 
 // Express View engine setup
-
-hbs.registerHelper('if_equal', function (a, b, opts) {
-  if (a == b) {
-      return opts.fn(this) 
-  } else { 
-      return opts.inverse(this) 
-  } 
-});
-hbs.registerHelper('if_not_equal', function (a, b, opts) {
-  if (a != b) {
-      return opts.fn(this) 
-  } else { 
-      return opts.inverse(this) 
-  } 
-});
 
 hbs.registerPartials(__dirname + '/views/partials');
 app.set('views', path.join(__dirname, 'views'));
@@ -61,9 +54,31 @@ app.locals.title = 'Rooms App - The Review Project';
 // injecting routes
 
 app.use('/', siteRoutes);
+app.use('/', userRoutes);
+app.use('/', roomRoutes);
+app.use('/', apiRoutes);
+app.use('/', reviewRoutes);
+
+
+// catch 404 and render a not-found.hbs template
+app.use((req, res, next) => {
+  res.status(404);
+  res.render('not-found');
+});
+  
+app.use((err, req, res, next) => {
+  // always log the error
+  console.error('ERROR', req.method, req.path, err);
+
+  // only render if the error ocurred before sending the response
+  if (!res.headersSent) {
+    res.status(500);
+    res.render('error');
+  }
+});
 
 app.listen(process.env.PORT, () => {
     console.log(`Listening on http://localhost:${process.env.PORT}`);
-  });
+});
   
   module.exports = app;
