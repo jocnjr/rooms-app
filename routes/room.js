@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Room = require('../models/room');
 const uploadCloud = require('../config/cloudinary.js');
+const ensureLogin = require("connect-ensure-login");
 
 
 router.get("/rooms", (req, res, next) => {
@@ -34,13 +35,14 @@ router.get("/room/:id", (req, res, next) => {
     });
 });
 
-router.get("/rooms/add", (req, res, next) => {
+
+router.get("/rooms/add", ensureLogin.ensureLoggedIn(), (req, res, next) => {
     let room = new Room();
     room._id = null;
     res.render("rooms/form", { room });
 });
   
-router.post("/rooms/add", uploadCloud.single('image'), (req, res, next) => {
+router.post("/rooms/add", ensureLogin.ensureLoggedIn(), uploadCloud.single('image'), (req, res, next) => {
     const {
       name,
       description,
@@ -76,7 +78,7 @@ router.post("/rooms/add", uploadCloud.single('image'), (req, res, next) => {
   
 });
   
-router.get("/rooms/edit/:id", (req, res, next) => {
+router.get("/rooms/edit/:id", ensureLogin.ensureLoggedIn(), (req, res, next) => {
     const roomId = req.params.id
   
     Room.findOne({ _id: roomId })
@@ -88,7 +90,7 @@ router.get("/rooms/edit/:id", (req, res, next) => {
       });
 });
   
-router.post("/rooms/edit", uploadCloud.single('image'), (req, res, next) => {
+router.post("/rooms/edit", ensureLogin.ensureLoggedIn(), uploadCloud.single('image'), (req, res, next) => {
     const {
       name,
       description,
@@ -121,7 +123,7 @@ router.post("/rooms/edit", uploadCloud.single('image'), (req, res, next) => {
       });
 });
 
-router.get("/rooms/delete/:id", (req, res, next) => {
+router.get("/rooms/delete/:id", ensureLogin.ensureLoggedIn(), (req, res, next) => {
   let roomId = req.params.id;
   if (!/^[0-9a-fA-F]{24}$/.test(roomId)) return res.status(404).send('not-found');
   Room.deleteOne({ _id: roomId })

@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 const Review = require('../models/review');
 const Room = require('../models/room');
-  
-router.post("/reviews/add", (req, res, next) => {
+const ensureLogin = require("connect-ensure-login");
+
+router.post("/reviews/add", ensureLogin.ensureLoggedIn(), (req, res, next) => {
     const {
       user,
       comment,

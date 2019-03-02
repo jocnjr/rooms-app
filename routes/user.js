@@ -6,6 +6,8 @@ const bcrypt = require("bcrypt");
 const bcryptSalt = 10;
 const uploadCloud = require('../config/cloudinary.js');
 const nodemailer = require('nodemailer');
+const ensureLogin = require("connect-ensure-login");
+
 
 let transporter = nodemailer.createTransport({
   host: process.env.MAILHOST,
@@ -115,8 +117,8 @@ router.post("/users/add", uploadCloud.single('image'), (req, res, next) => {
     .catch(err => { throw new Error(err)});
   
 });
-  
-router.get("/users/edit/:id", (req, res, next) => {
+
+router.get("/users/edit/:id", ensureLogin.ensureLoggedIn(), (req, res, next) => {
     const userId = req.params.id
   
     User.findOne({ _id: userId })
@@ -135,7 +137,7 @@ router.get("/users/edit/:id", (req, res, next) => {
       });
 });
   
-router.post("/users/edit", uploadCloud.single('image'), (req, res, next) => {
+router.post("/users/edit", ensureLogin.ensureLoggedIn(), uploadCloud.single('image'), (req, res, next) => {
     const userId = req.body.userId;
     let { name, email, password } = req.body;
   
@@ -202,7 +204,7 @@ router.post('/send/confirmation', (req, res) => {
 
 });
 
-router.get("/users/delete/:id", (req, res, next) => {
+router.get("/users/delete/:id", ensureLogin.ensureLoggedIn(), (req, res, next) => {
   let userId = req.params.id;
   if (!/^[0-9a-fA-F]{24}$/.test(userId)) return res.status(404).send('not-found');
   User.deleteOne({ _id: userId })

@@ -52,14 +52,13 @@ app.use(passportConfig);
 app.locals.title = 'Rooms App - The Review Project';
 
 // injecting routes
-// app.use(ensureLogin.ensureLoggedIn());
 
 app.use('/', siteRoutes);
+app.use('/', apiRoutes);
+app.use('/', authRoutes);
 app.use('/', userRoutes);
 app.use('/', roomRoutes);
-app.use('/', apiRoutes);
 app.use('/', reviewRoutes);
-app.use('/', authRoutes);
 
 
 // catch 404 and render a not-found.hbs template
