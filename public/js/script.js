@@ -63,11 +63,9 @@ window.onload = () => {
           map: map,
           title: room.name
         });
-  
-        map.fitBounds(bounds);
     }
   
-    (idRoom !== 'null') ? getRoom() : getRooms();
+    (idRoom !== null) ? getRoom() : getRooms();
   
   };
   
