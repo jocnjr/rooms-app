@@ -168,7 +168,7 @@ router.get('/confirm/:token', (req, res) => {
 
   User.findOneAndUpdate({ token }, {$set: {status: 'active'}}, { new: true })
   .then(user => {
-    if (user.status === 'active') res.status(500).send('user already confirmed');
+    // if (user.status === 'active') res.status(500).send('user already confirmed');
 
     (user) ? res.render("users/confirmation", { user }) : res.status(500).send('user not found');
   })
