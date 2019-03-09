@@ -9,14 +9,19 @@
 
     <hr class="my-4">
 
-    {{#each rooms}}
-      <p><a href="/room/{{_id}}">{{name}}</a></p>
-      <p>{{description}}</p>
-    <hr class="my-4">
+    <input type="text" name="search" placeholder="find a room">
+    
+    <hr id="roomsBelow" class="my-4">
 
+    {{#each rooms}}
+      <div class="room">
+        <p><a href="/room/{{_id}}">{{name}}</a></p>
+        <p>{{description}}</p>
+        <hr class="my-4">
+      </div>
     {{/each}}
     {{!-- <a class="btn btn-primary btn-lg" href="/courses" role="button">courses</a> --}}
 
-    <a class="btn btn-primary btn-lg" href="/users" role="button">users</a>
+    {{!-- <a class="btn btn-primary btn-lg" href="/users" role="button">users</a> --}}
   </div>
 </div>

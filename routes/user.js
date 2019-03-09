@@ -138,8 +138,7 @@ router.get("/users/edit/:id", ensureLogin.ensureLoggedIn(), (req, res, next) => 
 });
   
 router.post("/users/edit", ensureLogin.ensureLoggedIn(), uploadCloud.single('image'), (req, res, next) => {
-    const userId = req.body.userId;
-    let { name, email, password } = req.body;
+    let { fullName, email, password, userId} = req.body;
   
     if (password) {
       const salt = bcrypt.genSaltSync(bcryptSalt);
@@ -148,14 +147,19 @@ router.post("/users/edit", ensureLogin.ensureLoggedIn(), uploadCloud.single('ima
       password = hashPass;
     }
 
-    const imageUrl = req.file.url;
+
+    const imageUrl = '';
+    if (req.file) {
+      imageUrl = req.file.url;
+    }
   
-    User.update(
+    User.findOneAndUpdate(
       { _id: userId },
-      { $set: { name, email, password, imageUrl } },
+      { $set: { fullName, email, password, imageUrl } },
       { new: true } 
     )
       .then(user => {
+        console.log(user)
         res.redirect(`/users`);
       })
       .catch(error => {

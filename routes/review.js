@@ -12,10 +12,6 @@ router.post("/reviews/add", ensureLogin.ensureLoggedIn(), (req, res, next) => {
       roomId
     } = req.body;
 
-    if (req.file) {
-      imageUrl = req.file.url;
-    }
-
     const newReview = new Review({
       user,
       comment,
@@ -24,7 +20,6 @@ router.post("/reviews/add", ensureLogin.ensureLoggedIn(), (req, res, next) => {
   
     newReview.save()
     .then(review => {
-      console.log(review._id, roomId)
       Room.updateOne({_id: roomId}, { $push: { reviews: review._id }})
       .then(room => {
         res.redirect(`/room/${roomId}`);

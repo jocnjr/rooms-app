@@ -5,7 +5,7 @@ window.onload = () => {
     };
     
     const map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 10,
+      zoom: 15,
       center: ironhackSP
     });
   
@@ -70,6 +70,27 @@ window.onload = () => {
   
     (idRoom !== null) ? getRoom() : getRooms();
   
+    // search
+
+    const input = document.querySelector('input');
+
+    const searchFilter =  (e) => {
+      const divsRoom = document.getElementsByClassName('room');
+
+      Array.from(divsRoom).forEach(elem => {
+        const roomName = elem.querySelector('a').innerHTML.toLowerCase();
+        const searchText = input.value.toLowerCase();
+        if (searchText) {
+          if (!roomName.includes(searchText)) {
+            elem.classList.add('notMatch');
+          }
+        } else {
+          elem.classList.remove('notMatch');
+        }
+      });
+    };
+
+    input.addEventListener('keyup', searchFilter);
   };
   
   

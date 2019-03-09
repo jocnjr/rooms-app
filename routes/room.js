@@ -10,7 +10,6 @@ router.get("/rooms", (req, res, next) => {
     .then(rooms => {
       rooms.forEach(room => {
         if (room.owner && room.owner.equals(req.user._id)) {
-          console.log(`${room.owner}`);
           room.owned = true;
         }
       });
@@ -27,7 +26,11 @@ router.get("/room/:id", (req, res, next) => {
   Room.findOne({ _id: roomId })
     .populate({path: 'reviews', populate: { path: 'user' }})
     .then(room => {
-      console.log(room)
+      if (room.reviews.length > 0) {
+        room.ratingAverage = Math.floor(room.reviews.reduce((acc, item) => acc + item.rating, 0) / room.reviews.length);
+      } else {
+        room.ratingAverage = 0;
+      }
       res.render("rooms/detail", { room } );
     })
     .catch(error => {
