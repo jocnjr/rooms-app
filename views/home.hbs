@@ -9,17 +9,19 @@
 
     <hr class="my-4">
 
-    <input type="text" name="search" placeholder="find a room">
+    <input type="text" name="search" class="form-control" placeholder="find a room">
     
     <hr id="roomsBelow" class="my-4">
 
+    <div class="row">
     {{#each rooms}}
-      <div class="room">
+      <div class="room col-md-4">
         <p><a href="/room/{{_id}}">{{name}}</a></p>
         <p>{{description}}</p>
         <hr class="my-4">
       </div>
     {{/each}}
+    </div>
     {{!-- <a class="btn btn-primary btn-lg" href="/courses" role="button">courses</a> --}}
 
     {{!-- <a class="btn btn-primary btn-lg" href="/users" role="button">users</a> --}}

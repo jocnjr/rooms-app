@@ -80,6 +80,7 @@ window.onload = () => {
       Array.from(divsRoom).forEach(elem => {
         const roomName = elem.querySelector('a').innerHTML.toLowerCase();
         const searchText = input.value.toLowerCase();
+        
         if (searchText) {
           if (!roomName.includes(searchText)) {
             elem.classList.add('notMatch');

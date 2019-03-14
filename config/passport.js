@@ -47,7 +47,7 @@ app.use(session({
       }
 
       if (user.status === 'pending') {
-        return done(null, false, { message: 'Please, confirm your account <a href="/confirm/send"> here</a>'})
+        return done(null, false, { message: 'Please, confirm your account <a href="/confirm/send"> here</a>'});
       }
   
       return done(null, user);
