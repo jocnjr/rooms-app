@@ -45,13 +45,13 @@ router.get("/user/:id", (req, res, next) => {
     });
 });
 
-router.get("/users/add", (req, res, next) => {
+router.get("/users/add", ensureLogin.ensureLoggedIn(), (req, res, next) => {
     let user = new User();
     user._id = null;
     res.render("users/form", { user });
 });
   
-router.post("/users/add", uploadCloud.single('image'), (req, res, next) => {
+router.post("/users/add", ensureLogin.ensureLoggedIn(), uploadCloud.single('image'), (req, res, next) => {
     const {
       fullName,
       email,
