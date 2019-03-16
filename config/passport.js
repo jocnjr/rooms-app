@@ -57,7 +57,7 @@ app.use(session({
   passport.use(new FacebookStrategy({
     clientID: process.env.facebookClientID,
     clientSecret: process.env.facebookClientSecret,
-    callbackURL: "http://localhost:3000/auth/facebook/callback"
+    callbackURL: "/auth/facebook/callback"
   }, (accessToken, refreshToken, profile, done) => {
     User.findOne({ facebookID: profile.id })
     .then((user, err) => {
